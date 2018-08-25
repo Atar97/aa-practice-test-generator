@@ -31,27 +31,41 @@ puts "Example input: " + "array: 2, recursion: 1, sort: 1".yellow
 puts "To see the DEFAULT TESTS you can use type default"
 def make_defaults
   defaults_hash = {}
-  defaults_hash[:"1"] = "Default 1 == array: 2, recursion: 1, sort: 1"
-  defaults_hash[:"2"] = "Default 2 == recursion: 3, sort: 2, enumerable: 1"
-  defaults_hash[:"3"] = "Default 3 == array: 3, recursion: 1, sort: 1, string: 2"
-  defaults_hash[:"4"] = "Default 4 == array: 1, recursion: 1, sort: 1, enumerable: 1, string: 1"
-  defaults_hash[:"5"] = "Default 5 == array: 2, recursion: 1, sort: 1"
-  defaults_hash[:"6"] = "Default 6 == array: 2, recursion: 1, sort: 1"
-  defaults_hash[:"7"] = "Default 7 == Every array problem"
-  defaults_hash[:"8"] = "Default 8 == Every recursion problem"
-  defaults_hash[:"9"] = "Default 9 == Every string problem"
-  defaults_hash[:"10"] = "Default 10 == Every enumerable problem"
-  defaults_hash[:"11"] = "Default 11 == Every sort problem"
+  defaults_hash[:"1"] = "array: 2, recursion: 1, sort: 1"
+  defaults_hash[:"2"] = "recursion: 3, sort: 2, enumerable: 1"
+  defaults_hash[:"3"] = "array: 3, recursion: 1, sort: 1, string: 2"
+  defaults_hash[:"4"] = "array: 1, recursion: 1, sort: 1, enumerable: 1, string: 1"
+  defaults_hash[:"5"] = "array: 2, recursion: 1, sort: 1"
+  defaults_hash[:"6"] = "array: 2, recursion: 1, sort: 1"
+  #those are a work in progress
+  # defaults_hash[:"7"] = "Every array problem"
+  # defaults_hash[:"8"] = "Every recursion problem"
+  # defaults_hash[:"9"] = "Every string problem"
+  # defaults_hash[:"10"] = "Every enumerable problem"
+  # defaults_hash[:"11"] = "Every sort problem"
+  defaults_hash
 end
 
 def display_defaults(defaults_hash)
-
+  defaults_hash.each do |key, string|
+    puts "Default #{key} == #{string}"
+  end
 end
-input = gets.chomp.split(", ")
-if input == "default"
 
+def get_default_option
+  puts "Enter the number of the default you would like to use: "
+  gets.chomp.to_sym
+end
+
+first_input = gets.chomp
+
+if first_input == "default"
+  defaults = make_defaults
+  display_defaults(defaults)
+  default_option = get_default_option
+  input = defaults[default_option]
 else
-
+  input = first_input
 end
 
 def make_category_request(input)
@@ -63,7 +77,7 @@ def make_category_request(input)
   categoryrequests
 end
 
-categoryrequests = make_category_request(input)
+categoryrequests = make_category_request(input.split(", "))
 # make test array for each category
 master = Array.new
 categories.each do |category|
