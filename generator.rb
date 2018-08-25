@@ -1,5 +1,6 @@
 require 'csv'
 require 'colorize'
+require 'byebug'
 
 # Instructions
 system("clear")
@@ -24,16 +25,45 @@ puts "Possible categories: #{categories.join(", ")}".magenta
 puts
 
 # get user request
+# categories = [recursion, array, string, enumerable, sort]
 puts "Input your requests, separated by commas and spaces please"
 puts "Example input: " + "array: 2, recursion: 1, sort: 1".yellow
-input = gets.chomp.split(", ")
-
-categoryrequests = Hash.new(0)
-input.each do |request|
-  req = request.downcase.split(": ")
-  categoryrequests[req[0]] = req[1].to_i
+puts "To see the DEFAULT TESTS you can use type default"
+def make_defaults
+  defaults_hash = {}
+  defaults_hash[:"1"] = "Default 1 == array: 2, recursion: 1, sort: 1"
+  defaults_hash[:"2"] = "Default 2 == recursion: 3, sort: 2, enumerable: 1"
+  defaults_hash[:"3"] = "Default 3 == array: 3, recursion: 1, sort: 1, string: 2"
+  defaults_hash[:"4"] = "Default 4 == array: 1, recursion: 1, sort: 1, enumerable: 1, string: 1"
+  defaults_hash[:"5"] = "Default 5 == array: 2, recursion: 1, sort: 1"
+  defaults_hash[:"6"] = "Default 6 == array: 2, recursion: 1, sort: 1"
+  defaults_hash[:"7"] = "Default 7 == Every array problem"
+  defaults_hash[:"8"] = "Default 8 == Every recursion problem"
+  defaults_hash[:"9"] = "Default 9 == Every string problem"
+  defaults_hash[:"10"] = "Default 10 == Every enumerable problem"
+  defaults_hash[:"11"] = "Default 11 == Every sort problem"
 end
 
+def display_defaults(defaults_hash)
+
+end
+input = gets.chomp.split(", ")
+if input == "default"
+
+else
+
+end
+
+def make_category_request(input)
+  categoryrequests = Hash.new(0)
+  input.each do |request|
+    req = request.downcase.split(": ")
+    categoryrequests[req[0]] = req[1].to_i
+  end
+  categoryrequests
+end
+
+categoryrequests = make_category_request(input)
 # make test array for each category
 master = Array.new
 categories.each do |category|
