@@ -105,11 +105,13 @@ class Generator
     @problem_master
   end
 
-  def create_new_files
+  def generate_new_files
     @generated_files << File.open("practice_test.rb", "w")
     @generated_files << File.open("spec.rb", "w")
     @generated_files << File.open("solution.rb", "w")
   end
+
+
 
   def run
     print_instructions
@@ -129,7 +131,7 @@ class Generator
     # practice_test = File.open("practice_test.rb", "w")
     # spec = File.open("spec.rb", "w")
     # solution = File.open("solution.rb", "w")
-    create_new_files
+    generate_new_files
 
     # require rspec and the practice_test in the spec
     @generated_files[1] << "require 'rspec'" << "\n"
@@ -146,11 +148,18 @@ class Generator
     # practice_test.close
     # spec.close
     # solution.close
-    @generated_files.each {|file| file.close}
+    close_files
 
     puts
     puts "Done!"
   end
+
+  private
+
+  def close_files
+    @generated_files.each {|file| file.close}
+  end
+
 end
 
 generator = Generator.new('list.csv')
