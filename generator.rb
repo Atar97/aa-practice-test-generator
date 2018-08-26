@@ -5,6 +5,7 @@ class Generator
   def initialize(problem_file_name)
     @user_request = Hash.new(0)
     @problem_file
+    @categories = []
     read_csv_file(problem_file_name)
   end
 
@@ -52,12 +53,11 @@ class Generator
     true
   end
 
-  def make_categories(csv_tests)
-    categories = []
-    csv_tests.each do |test|
-      categories << test[1] unless categories.include?(test[1])
+  def make_categories
+    @problem_file.each do |test|
+      @categories << test[1] unless @categories.include?(test[1])
     end
-    categories
+    @categories
   end
 
   def receive_requests(categories)
@@ -89,33 +89,34 @@ class Generator
     @user_request
   end
 
-  def make_master(categories)
+  def make_master
     master = []
-    categories.each do |category|
-      all_prob_for_category = []
+    @categories.each do |category|
+      all_prob_category = []
+
       @problem_file.each do |test_info_array|
         if category == test_info_array[1]
-          all_prob_for_category << test_info_array
+          all_prob_category << test_info_array
         end
       end
 
-      num_problems_requested = @user_request[category]
-      master.concat(all_prob_for_category.sample(num_problems_requested))
+      needed_problems = all_prob_category.sample(@user_request[category])
+      master.concat(needed_problems)
     end
     master
   end
 
   def run
     print_instructions
-    category_array = make_categories(@problem_file)
-    user_request = receive_requests(category_array)
+    make_categories
+    user_request = receive_requests(@categories)
     input = process_requests(user_request)
 
 
     make_category_request(input)
     # make test array for each category
 
-    master = make_master(category_array)
+    master = make_master
 
 
     # create new test, spec and solution files
