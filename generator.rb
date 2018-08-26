@@ -2,8 +2,10 @@ require 'csv'
 require 'colorize'
 require 'byebug'
 class Generator
-  def initialize
-
+  def initialize(problem_file_name)
+    @user_request = ""
+    @problem_file
+    read_csv_file(problem_file_name)
   end
 
   def display_defaults(defaults_hash)
@@ -45,8 +47,9 @@ class Generator
     defaults_hash
   end
 
-  def read_csv_file
-    CSV.read('list.csv', headers: true, header_converters: :symbol, converters: :all)
+  def read_csv_file(file_name)
+    @problem_file = CSV.read(file_name, headers: true, header_converters: :symbol, converters: :all)
+    true
   end
 
   def make_categories(csv_tests)
@@ -104,16 +107,15 @@ class Generator
 
   def run
     print_instructions
-    csv_tests = read_csv_file
-    category_array = make_categories(csv_tests)
-    request = receive_requests(category_array)
-    input = process_requests(request)
+    category_array = make_categories(@problem_file)
+    user_request = receive_requests(category_array)
+    input = process_requests(user_request)
 
 
     user_request_hash = make_category_request(input)
     # make test array for each category
 
-    master = make_master(csv_tests, category_array, user_request_hash)
+    master = make_master(@problem_file, category_array, user_request_hash)
 
 
     # create new test, spec and solution files
@@ -142,5 +144,5 @@ class Generator
   end
 end
 
-generator = Generator.new
+generator = Generator.new('list.csv')
 generator.run
