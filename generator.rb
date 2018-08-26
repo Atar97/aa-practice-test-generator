@@ -109,9 +109,23 @@ class Generator
     @generated_files[:prac] = File.open("practice_test.rb", "w")
     @generated_files[:spec] = File.open("spec.rb", "w")
     @generated_files[:sol] = File.open("solution.rb", "w")
+    # close_files
   end
 
-  def give_files
+  def give_files_requirements
+    # open_files
+    @generated_files[:spec] << "require 'rspec'\n"
+    @generated_files[:spec] << "require_relative 'practice_test'\n"
+    @generated_files[:prac] << "require 'byebug'\n"
+    # close_files
+  end
+
+  def add_questions
+    @problem_master.each do |test|
+      @generated_files[:prac] << File.read(test[2]) << "\n"
+      @generated_files[:spec] << File.read(test[3]) << "\n"
+      @generated_files[:sol] << File.read(test[4]) << "\n"
+    end
   end
 
 
@@ -128,31 +142,13 @@ class Generator
 
     make_master
 
-
-    # # create new test, spec and solution files
-    # practice_test = File.open("practice_test.rb", "w")
-    # spec = File.open("spec.rb", "w")
-    # solution = File.open("solution.rb", "w")
     generate_new_files
-
-    # require rspec and the practice_test in the spec
-    @generated_files[:spec] << "require 'rspec'" << "\n"
-    @generated_files[:spec] << "require_relative 'practice_test'" << "\n"
+    give_files_requirements
 
     # loop through master tests and add text to the new files
-    @problem_master.each do |test|
-      @generated_files[:prac] << File.read(test[2]) << "\n"
-      @generated_files[:spec] << File.read(test[3]) << "\n"
-      @generated_files[:sol] << File.read(test[4]) << "\n"
-    end
-
-    # close the files that were just created
-    # practice_test.close
-    # spec.close
-    # solution.close
+    add_questions
     close_files
 
-    puts
     puts "Done!"
   end
 
@@ -162,9 +158,10 @@ class Generator
     @generated_files.each {|key, file| file.close}
   end
 
-  def open_files
-    @generated_files.each {|key, file| File.open(file.basename)}
-  end
+  # def open_files
+  #   # byebug
+  #   @generated_files.each {|key, file| File.open(File.basename(file), "w")}
+  # end
 
 end
 
