@@ -11,16 +11,10 @@ class Generator
     @categories = Generator.make_categories(@problem_csv)
     @generated_files = {}
     make_user(count_problems)
-    @defaults = @user.defaults
   end
 
   def make_user(problem_counts)
     @user = User.new(problem_counts)
-  end
-
-  def get_default_option
-    puts "Enter the number of the default you would like to use: "
-    gets.chomp.to_sym
   end
 
   def self.read_csv_file(file_name)
@@ -49,27 +43,8 @@ class Generator
     counting_hash
   end
 
-  def receive_requests
-    puts "Possible categories: #{@categories.join(", ")}".magenta
-    puts "Input your requests, separated by commas and spaces please"
-    puts "Example input: " + "array: 2, recursion: 1, sort: 1".yellow
-    puts "To see the DEFAULT TESTS you can use type default"
-    parse_default_request(gets.chomp)
-  end
-
-  def parse_default_request(request)
-    default_inputs = ["default", "defaults", "D", "d"]
-    if default_inputs.include?(request)
-      @user.display_defaults
-      default_option = get_default_option
-      input = @defaults[default_option].last
-    else
-      request
-    end
-  end
-
   def create_user_requests
-    request = receive_requests.split(", ")
+    request = @user.receive_requests(@categories).split(", ")
     request.each do |request|
       req = request.downcase.split(": ")
       @user_request[req[0]] = req[1].to_i

@@ -1,11 +1,10 @@
 class User
   attr_reader :defaults, :input
-  
+
   def initialize(problem_counts)
     @defaults = {}
     make_defaults(problem_counts)
-    @input
-
+    @requests 
   end
 
   def initial_instructions
@@ -45,6 +44,30 @@ class User
     @defaults.each do |key, string_array|
       puts "Default #{key} == #{string_array.first}"
     end
+  end
+
+  def parse_default_request(request)
+    default_inputs = ["default", "defaults", "D", "d"]
+    if default_inputs.include?(request)
+      display_defaults
+      default_option = get_default_option
+      input = @defaults[default_option].last
+    else
+      request
+    end
+  end
+
+  def get_default_option
+    puts "Enter the number of the default you would like to use: "
+    gets.chomp.to_sym
+  end
+
+  def receive_requests(categories)
+    puts "Possible categories: #{categories.join(", ")}".magenta
+    puts "Input your requests, separated by commas and spaces please"
+    puts "Example input: " + "array: 2, recursion: 1, sort: 1".yellow
+    puts "To see the DEFAULT TESTS you can use type default"
+    parse_default_request(gets.chomp)
   end
 
 end
