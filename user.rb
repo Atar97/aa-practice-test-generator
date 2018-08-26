@@ -1,3 +1,5 @@
+require 'colorize'
+
 class User
   attr_reader :defaults, :request
 
@@ -72,6 +74,12 @@ class User
       ret[cat_name] += num_of_prob
     end
     ret
+  end
+
+  def finish
+    puts "Done"
+    puts "Your practice test will have this makeup:".cyan
+    puts User.request_hash_to_str(@request).yellow
   end
 
   def self.defaults?(input)

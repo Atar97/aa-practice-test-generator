@@ -72,13 +72,6 @@ class Generator
     end
   end
 
-  def finish
-    close_files
-    puts "Done"
-    puts "Your practice test will have this makeup:".cyan
-    puts User.request_hash_to_str(@user.request).yellow
-  end
-
   def run
     @user.initial_instructions
     give_user_problems
@@ -86,7 +79,8 @@ class Generator
     generate_new_files
     add_requirements
     add_questions
-    finish
+    close_files
+    @user.finish
   end
 
   private
@@ -98,5 +92,4 @@ class Generator
 end
 
 generator = Generator.new('list.csv')
-# puts generator.count_problems
 generator.run
