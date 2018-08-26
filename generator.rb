@@ -9,11 +9,11 @@ class Generator
     @problem_csv = Generator.read_csv_file(problem_file_name)
     @categories = Generator.make_categories(@problem_csv)
     @generated_files = {}
-    make_user(count_problems)
+    @user = User.new
   end
-
-  def make_user(problem_counts)
-    @user = User.new(problem_counts)
+  
+  def give_user_problems
+    @user.make_defaults(count_problems)
   end
 
   def self.read_csv_file(file_name)
@@ -89,6 +89,7 @@ class Generator
 
   def run
     @user.initial_instructions
+    give_user_problems
     @user.create_request_hash(@categories)
     generate_new_files
     add_requirements
