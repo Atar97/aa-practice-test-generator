@@ -6,6 +6,8 @@ class Generator
     @user_request = Hash.new(0)
     @problem_file
     @categories = []
+    @problem_master = []
+    @new_files = []
     read_csv_file(problem_file_name)
   end
 
@@ -90,33 +92,37 @@ class Generator
   end
 
   def make_master
-    master = []
     @categories.each do |category|
       all_prob_category = []
-
       @problem_file.each do |test_info_array|
         if category == test_info_array[1]
           all_prob_category << test_info_array
         end
       end
-
       needed_problems = all_prob_category.sample(@user_request[category])
-      master.concat(needed_problems)
+      @problem_master.concat(needed_problems)
     end
-    master
+    @problem_master
+  end
+
+  def create_new_files
+    @new_files << File.open("practice_test.rb", "w")
+    @new_files << File.open("spec.rb", "w")
+    @new_files << File.open("solution.rb", "w")
   end
 
   def run
     print_instructions
+
     make_categories
+
     user_request = receive_requests(@categories)
+
     input = process_requests(user_request)
 
-
     make_category_request(input)
-    # make test array for each category
 
-    master = make_master
+    make_master
 
 
     # create new test, spec and solution files
@@ -129,7 +135,7 @@ class Generator
     spec << "require_relative 'practice_test'" << "\n"
 
     # loop through master tests and add text to the new files
-    master.each do |test|
+    @problem_master.each do |test|
       practice_test << File.read(test[2]) << "\n"
       spec << File.read(test[3]) << "\n"
       solution << File.read(test[4]) << "\n"
