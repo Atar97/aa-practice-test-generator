@@ -7,7 +7,7 @@ class Generator
     @problem_file
     @categories = []
     @problem_master = []
-    @generated_files = []
+    @generated_files = {}
     read_csv_file(problem_file_name)
   end
 
@@ -106,11 +106,13 @@ class Generator
   end
 
   def generate_new_files
-    @generated_files << File.open("practice_test.rb", "w")
-    @generated_files << File.open("spec.rb", "w")
-    @generated_files << File.open("solution.rb", "w")
+    @generated_files[:prac] = File.open("practice_test.rb", "w")
+    @generated_files[:spec] = File.open("spec.rb", "w")
+    @generated_files[:sol] = File.open("solution.rb", "w")
   end
 
+  def give_files
+  end
 
 
   def run
@@ -134,14 +136,14 @@ class Generator
     generate_new_files
 
     # require rspec and the practice_test in the spec
-    @generated_files[1] << "require 'rspec'" << "\n"
-    @generated_files[1] << "require_relative 'practice_test'" << "\n"
+    @generated_files[:spec] << "require 'rspec'" << "\n"
+    @generated_files[:spec] << "require_relative 'practice_test'" << "\n"
 
     # loop through master tests and add text to the new files
     @problem_master.each do |test|
-      @generated_files[0] << File.read(test[2]) << "\n"
-      @generated_files[1] << File.read(test[3]) << "\n"
-      @generated_files[2] << File.read(test[4]) << "\n"
+      @generated_files[:prac] << File.read(test[2]) << "\n"
+      @generated_files[:spec] << File.read(test[3]) << "\n"
+      @generated_files[:sol] << File.read(test[4]) << "\n"
     end
 
     # close the files that were just created
@@ -157,7 +159,11 @@ class Generator
   private
 
   def close_files
-    @generated_files.each {|file| file.close}
+    @generated_files.each {|key, file| file.close}
+  end
+
+  def open_files
+    @generated_files.each {|key, file| File.open(file.basename)}
   end
 
 end
