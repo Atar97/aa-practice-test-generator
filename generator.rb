@@ -6,7 +6,6 @@ class Generator
     @user_request = Hash.new(0)
     @problem_file
     @categories = []
-    @problem_master = []
     @generated_files = {}
     @defaults = {}
     make_defaults
@@ -91,7 +90,8 @@ class Generator
     @user_request
   end
 
-  def make_master
+  def make_problem_master
+    master = []
     @categories.each do |category|
       all_prob_category = []
       @problem_file.each do |test_info_array|
@@ -100,9 +100,9 @@ class Generator
         end
       end
       needed_problems = all_prob_category.sample(@user_request[category])
-      @problem_master.concat(needed_problems)
+      master.concat(needed_problems)
     end
-    @problem_master
+    master
   end
 
   def generate_new_files
@@ -118,7 +118,8 @@ class Generator
   end
 
   def add_questions
-    @problem_master.each do |test|
+    problem_master = make_problem_master
+    problem_master.each do |test|
       @generated_files[:prac] << File.read(test[2]) << "\n"
       @generated_files[:spec] << File.read(test[3]) << "\n"
       @generated_files[:sol] << File.read(test[4]) << "\n"
@@ -135,7 +136,6 @@ class Generator
     make_categories
     user_input = receive_requests
     category_request(user_input)
-    make_master
     generate_new_files
     add_requirements
     add_questions
