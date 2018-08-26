@@ -1,10 +1,10 @@
 class User
-  attr_reader :defaults, :input
+  attr_reader :defaults, :request
 
   def initialize(problem_counts)
     @defaults = {}
     make_defaults(problem_counts)
-    @requests 
+    @request = Hash.new(0)
   end
 
   def initial_instructions
@@ -46,6 +46,23 @@ class User
     end
   end
 
+  def create_request_hash(categories)
+    category = receive_requests(categories).split(", ")
+    category.each do |category|
+      req = category.downcase.split(": ")
+      @request[req[0]] = req[1].to_i
+    end
+    @request
+  end
+
+  def receive_requests(categories)
+    puts "Possible categories: #{categories.join(", ")}".magenta
+    puts "Input your requests, separated by commas and spaces please"
+    puts "Example input: " + "array: 2, recursion: 1, sort: 1".yellow
+    puts "To see the DEFAULT TESTS you can use type default"
+    parse_default_request(gets.chomp)
+  end
+
   def parse_default_request(request)
     default_inputs = ["default", "defaults", "D", "d"]
     if default_inputs.include?(request)
@@ -60,14 +77,6 @@ class User
   def get_default_option
     puts "Enter the number of the default you would like to use: "
     gets.chomp.to_sym
-  end
-
-  def receive_requests(categories)
-    puts "Possible categories: #{categories.join(", ")}".magenta
-    puts "Input your requests, separated by commas and spaces please"
-    puts "Example input: " + "array: 2, recursion: 1, sort: 1".yellow
-    puts "To see the DEFAULT TESTS you can use type default"
-    parse_default_request(gets.chomp)
   end
 
 end

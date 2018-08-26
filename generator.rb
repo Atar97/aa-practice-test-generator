@@ -6,7 +6,6 @@ require_relative 'user'
 class Generator
 
   def initialize(problem_file_name)
-    @user_request = Hash.new(0)
     @problem_csv = Generator.read_csv_file(problem_file_name)
     @categories = Generator.make_categories(@problem_csv)
     @generated_files = {}
@@ -43,15 +42,6 @@ class Generator
     counting_hash
   end
 
-  def create_user_requests
-    request = @user.receive_requests(@categories).split(", ")
-    request.each do |request|
-      req = request.downcase.split(": ")
-      @user_request[req[0]] = req[1].to_i
-    end
-    @user_request
-  end
-
   def self.request_hash_to_str(request_hash)
     ret = ""
     request_hash.each do |name, number|
@@ -69,7 +59,7 @@ class Generator
           all_prob_category << test_info_array
         end
       end
-      needed_problems = all_prob_category.sample(@user_request[category])
+      needed_problems = all_prob_category.sample(@user.request[category])
       master.concat(needed_problems)
     end
     master
@@ -94,12 +84,12 @@ class Generator
     close_files
     puts "Done"
     puts "Your practice test will have this makeup:".cyan
-    puts Generator.request_hash_to_str(@user_request).yellow
+    puts Generator.request_hash_to_str(@user.request).yellow
   end
 
   def run
     @user.initial_instructions
-    create_user_requests
+    @user.create_request_hash(@categories)
     generate_new_files
     add_requirements
     add_questions
