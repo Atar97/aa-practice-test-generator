@@ -8,18 +8,9 @@ class Generator
     @categories = []
     @problem_master = []
     @generated_files = {}
+    @defaults = {}
+    make_defaults
     read_csv_file(problem_file_name)
-  end
-
-  def display_defaults(defaults_hash)
-    defaults_hash.each do |key, string|
-      puts "Default #{key} == #{string}"
-    end
-  end
-
-  def get_default_option
-    puts "Enter the number of the default you would like to use: "
-    gets.chomp.to_sym
   end
 
   def print_instructions
@@ -33,21 +24,31 @@ class Generator
     puts "Good luck!"
   end
 
+  def display_defaults
+    @defaults.each do |key, string|
+      puts "Default #{key} == #{string}"
+    end
+  end
+
+  def get_default_option
+    puts "Enter the number of the default you would like to use: "
+    gets.chomp.to_sym
+  end
+
   def make_defaults
-    defaults_hash = {}
-    defaults_hash[:"1"] = "array: 2, recursion: 1, sort: 1"
-    defaults_hash[:"2"] = "recursion: 3, sort: 2, enumerable: 1"
-    defaults_hash[:"3"] = "array: 3, recursion: 1, sort: 1, string: 2"
-    defaults_hash[:"4"] = "array: 1, recursion: 1, sort: 1, enumerable: 1, string: 1"
-    defaults_hash[:"5"] = "array: 2, recursion: 1, sort: 1"
-    defaults_hash[:"6"] = "array: 2, recursion: 1, sort: 1"
+    @defaults[:"1"] = "array: 2, recursion: 1, sort: 1"
+    @defaults[:"2"] = "recursion: 3, sort: 2, enumerable: 1"
+    @defaults[:"3"] = "array: 3, recursion: 1, sort: 1, string: 2"
+    @defaults[:"4"] = "array: 1, recursion: 1, sort: 1, enumerable: 1, string: 1"
+    @defaults[:"5"] = "array: 2, recursion: 1, sort: 1"
+    @defaults[:"6"] = "array: 2, recursion: 1, sort: 1"
     #those are a work in progress
     # defaults_hash[:"7"] = "Every array problem"
     # defaults_hash[:"8"] = "Every recursion problem"
     # defaults_hash[:"9"] = "Every string problem"
     # defaults_hash[:"10"] = "Every enumerable problem"
     # defaults_hash[:"11"] = "Every sort problem"
-    defaults_hash
+    @defaults
   end
 
   def read_csv_file(file_name)
@@ -62,27 +63,26 @@ class Generator
     @categories
   end
 
-  def receive_requests(categories)
-    puts "Possible categories: #{categories.join(", ")}".magenta
+  def receive_requests
+    puts "Possible categories: #{@categories.join(", ")}".magenta
     puts "Input your requests, separated by commas and spaces please"
     puts "Example input: " + "array: 2, recursion: 1, sort: 1".yellow
     puts "To see the DEFAULT TESTS you can use type default"
-    gets.chomp
+    process_requests(gets.chomp)
   end
 
   def process_requests(request)
     default_inputs = ["default", "defaults", "D", "d"]
     if default_inputs.include?(request)
-      defaults = make_defaults
-      display_defaults(defaults)
+      display_defaults
       default_option = get_default_option
-      input = defaults[default_option]
+      input = @defaults[default_option]
     else
       request
     end
   end
 
-  def make_category_request(input_string)
+  def category_request(input_string)
     input_string = input_string.split(", ")
     input_string.each do |request|
       req = request.downcase.split(": ")
@@ -109,15 +109,12 @@ class Generator
     @generated_files[:prac] = File.open("practice_test.rb", "w")
     @generated_files[:spec] = File.open("spec.rb", "w")
     @generated_files[:sol] = File.open("solution.rb", "w")
-    # close_files
   end
 
-  def give_files_requirements
-    # open_files
+  def add_requirements
     @generated_files[:spec] << "require 'rspec'\n"
     @generated_files[:spec] << "require_relative 'practice_test'\n"
     @generated_files[:prac] << "require 'byebug'\n"
-    # close_files
   end
 
   def add_questions
@@ -128,25 +125,21 @@ class Generator
     end
   end
 
+  def finish(user_request)
+
+  end
+
 
   def run
     print_instructions
-
     make_categories
-
-    user_request = receive_requests(@categories)
-
-    input = process_requests(user_request)
-
-    make_category_request(input)
-
+    user_input = receive_requests
+    category_request(user_input)
     make_master
-
     generate_new_files
-    give_files_requirements
-
-    # loop through master tests and add text to the new files
+    add_requirements
     add_questions
+
     close_files
 
     puts "Done!"
