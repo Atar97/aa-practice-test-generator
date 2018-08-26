@@ -1,8 +1,10 @@
 require 'csv'
 require 'colorize'
 require 'byebug'
+require_relative 'user'
 class Generator
   def initialize(problem_file_name)
+    @user = User.new
     @user_request = Hash.new(0)
     @problem_file
     read_csv_file(problem_file_name)
@@ -11,17 +13,6 @@ class Generator
     @generated_files = {}
     @defaults = {}
     make_defaults
-  end
-
-  def print_instructions
-    system("clear")
-    puts "Welcome to a/A Practice 01Assessment Generator 2.0".cyan
-    puts "This generator will create a practice test based on your input. " \
-          "You can choose how many problems from each category to include in your test. "
-    puts "This program will generate 3 files in this folder: practice_test, spec, and solution. " \
-          "Complete the practice_test file, running the spec file to check your answers. " \
-          "When your time is up (you are timing yourself, right?), compare your answers to the solutions."
-    puts "Good luck!"
   end
 
   def display_defaults
@@ -158,7 +149,7 @@ class Generator
 
 
   def run
-    print_instructions
+    @user.initial_instructions
     create_user_requests
     generate_new_files
     add_requirements
