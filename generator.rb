@@ -11,8 +11,7 @@ class Generator
     @categories = []
     make_categories
     @generated_files = {}
-    @defaults = {}
-    make_defaults
+    @defaults = @user.make_defaults(count_problems)
   end
 
   def display_defaults
@@ -26,27 +25,7 @@ class Generator
     gets.chomp.to_sym
   end
 
-  def make_defaults
-    counts = count_problems
-    @defaults[:"1"] = ["array: 2, recursion: 1, sort: 1"]
-    @defaults[:"2"] = ["recursion: 3, sort: 2, enumerable: 1"]
-    @defaults[:"3"] = ["array: 3, recursion: 1, sort: 1, string: 2"]
-    @defaults[:"4"] = ["array: 1, recursion: 1, sort: 1, enumerable: 1, string: 1"]
-    @defaults[:"5"] = ["array: 2, recursion: 1, sort: 1"]
-    @defaults[:"6"] = ["array: 2, recursion: 1, sort: 1"]
-    @defaults[:"7"] = ["Every array problem", "array: #{counts['array']}"]
-    @defaults[:"8"] = ["Every recursion problem", "recursion: #{counts['recursion']}"]
-    @defaults[:"9"] = ["Every string problem", "string: #{counts['string']}"]
-    @defaults[:"10"] = ["Every enumerable problem", "enumerable: #{counts['enumerable']}"]
-    @defaults[:"11"] = ["Every sort problem", "sort: #{counts['sort']}"]
-    all_probs_str = ""
-    counts.each do |category, number|
-      all_probs_str += "#{category}: #{number}, "
-    end
-    all_probs_str = all_probs_str[0..-3]
-    @defaults[:"12"] = ["Every Problem", all_probs_str]
-    @defaults
-  end
+
 
   def read_csv_file(file_name)
     @problem_file = CSV.read(file_name, headers: true, header_converters: :symbol, converters: :all)
