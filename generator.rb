@@ -28,6 +28,23 @@ class Generator
     puts "Good luck!"
   end
 
+  def make_defaults
+    defaults_hash = {}
+    defaults_hash[:"1"] = "array: 2, recursion: 1, sort: 1"
+    defaults_hash[:"2"] = "recursion: 3, sort: 2, enumerable: 1"
+    defaults_hash[:"3"] = "array: 3, recursion: 1, sort: 1, string: 2"
+    defaults_hash[:"4"] = "array: 1, recursion: 1, sort: 1, enumerable: 1, string: 1"
+    defaults_hash[:"5"] = "array: 2, recursion: 1, sort: 1"
+    defaults_hash[:"6"] = "array: 2, recursion: 1, sort: 1"
+    #those are a work in progress
+    # defaults_hash[:"7"] = "Every array problem"
+    # defaults_hash[:"8"] = "Every recursion problem"
+    # defaults_hash[:"9"] = "Every string problem"
+    # defaults_hash[:"10"] = "Every enumerable problem"
+    # defaults_hash[:"11"] = "Every sort problem"
+    defaults_hash
+  end
+
   def read_csv_file
     CSV.read('list.csv', headers: true, header_converters: :symbol, converters: :all)
   end
@@ -40,6 +57,26 @@ class Generator
     categories
   end
 
+  def receive_requests(categories)
+    puts "Possible categories: #{categories.join(", ")}".magenta
+    puts "Input your requests, separated by commas and spaces please"
+    puts "Example input: " + "array: 2, recursion: 1, sort: 1".yellow
+    puts "To see the DEFAULT TESTS you can use type default"
+    gets.chomp
+  end
+
+  def process_requests(request)
+    if request == "default"
+      defaults = make_defaults
+      display_defaults(defaults)
+      default_option = get_default_option
+      input = defaults[default_option]
+    else
+      request
+    end
+  end
+
+
   def run
 
     print_instructions
@@ -47,42 +84,8 @@ class Generator
     tests = read_csv_file
     # list possible categories
     categories = make_categories(tests)
-    puts "Possible categories: #{categories.join(", ")}".magenta
-    puts
-
-    # get user request
-    # categories = [recursion, array, string, enumerable, sort]
-    puts "Input your requests, separated by commas and spaces please"
-    puts "Example input: " + "array: 2, recursion: 1, sort: 1".yellow
-    puts "To see the DEFAULT TESTS you can use type default"
-    def make_defaults
-      defaults_hash = {}
-      defaults_hash[:"1"] = "array: 2, recursion: 1, sort: 1"
-      defaults_hash[:"2"] = "recursion: 3, sort: 2, enumerable: 1"
-      defaults_hash[:"3"] = "array: 3, recursion: 1, sort: 1, string: 2"
-      defaults_hash[:"4"] = "array: 1, recursion: 1, sort: 1, enumerable: 1, string: 1"
-      defaults_hash[:"5"] = "array: 2, recursion: 1, sort: 1"
-      defaults_hash[:"6"] = "array: 2, recursion: 1, sort: 1"
-      #those are a work in progress
-      # defaults_hash[:"7"] = "Every array problem"
-      # defaults_hash[:"8"] = "Every recursion problem"
-      # defaults_hash[:"9"] = "Every string problem"
-      # defaults_hash[:"10"] = "Every enumerable problem"
-      # defaults_hash[:"11"] = "Every sort problem"
-      defaults_hash
-    end
-
-
-    first_input = gets.chomp
-
-    if first_input == "default"
-      defaults = make_defaults
-      display_defaults(defaults)
-      default_option = get_default_option
-      input = defaults[default_option]
-    else
-      input = first_input
-    end
+    request = receive_requests(categories)
+    input = process_requests(request)
 
     def make_category_request(input)
       categoryrequests = Hash.new(0)
