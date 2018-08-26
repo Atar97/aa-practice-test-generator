@@ -6,14 +6,12 @@ deep_dup,recursion,problems/deep_dup.rb,specs/deep_dup_spec.rb,solutions/deep_du
 digital_root,recursion,problems/digital_root.rb,specs/digital_root_spec.rb,solutions/digital_root_solution.rb
 doubler,enumerable,problems/doubler.rb,specs/doubler_spec.rb,solutions/doubler_solution.rb
 dups,array,problems/dups.rb,specs/dups_spec.rb,solutions/dups_solution.rb
-eight_queens,recursion,problems/eight_queens.rb,specs/eight_queens_spec.rb,solutions/eight_queens_solution.rb
 exponent,recursion,problems/exponent.rb,specs/exponent_spec.rb,solutions/exponent_solution.rb
 factorials_rec,recursion,problems/factorials_rec.rb,specs/factorials_rec_spec.rb,solutions/factorials_rec_solution.rb
 factors,array,problems/factors.rb,specs/factors_spec.rb,solutions/factors_solution.rb
 fibs_sum,recursion,problems/fibs_sum.rb,specs/fibs_sum_spec.rb,solutions/fibs_sum_solution.rb
 first_even_numbers_sum,recursion,problems/first_even_numbers_sum.rb,specs/first_even_numbers_sum_spec.rb,solutions/first_even_numbers_sum_solution.rb
 jumble_sort,sort,problems/jumble_sort.rb,specs/jumble_sort_spec.rb,solutions/jumble_sort_solution.rb
-make_better_change,recursion,problems/make_better_change.rb,specs/make_better_change_spec.rb,solutions/make_better_change_solution.rb
 median,array,problems/median.rb,specs/median_spec.rb,solutions/median_solution.rb
 merge_sort,sort,problems/merge_sort.rb,specs/merge_sort_spec.rb,solutions/merge_sort_solution.rb
 my_all,enumerable,problems/my_all.rb,specs/my_all_spec.rb,solutions/my_all_solution.rb
