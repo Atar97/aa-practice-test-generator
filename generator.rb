@@ -11,7 +11,7 @@ class Generator
     @generated_files = {}
     @user = User.new
   end
-  
+
   def give_user_problems
     @user.make_defaults(count_problems)
   end
@@ -40,14 +40,6 @@ class Generator
       counting_hash[test_info[1]] += 1
     end
     counting_hash
-  end
-
-  def self.request_hash_to_str(request_hash)
-    ret = ""
-    request_hash.each do |name, number|
-      ret << "#{name}: #{number}, "
-    end
-    ret[0...-1]
   end
 
   def make_problem_master
@@ -84,7 +76,7 @@ class Generator
     close_files
     puts "Done"
     puts "Your practice test will have this makeup:".cyan
-    puts Generator.request_hash_to_str(@user.request).yellow
+    puts User.request_hash_to_str(@user.request).yellow
   end
 
   def run

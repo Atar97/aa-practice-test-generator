@@ -47,13 +47,31 @@ class User
 
   def create_request_hash(categories)
     print_category_instructions(categories)
-    category = parse_default_request(gets.chomp)
-    category = category.split(", ")
-    category.each do |category|
-      req = category.downcase.split(": ")
-      @request[req[0]] = req[1].to_i
+    user_input = gets.chomp
+    if User.defaults?(user_input)
+      user_input = handle_default_request
     end
-    @request
+    @request = User.request_str_to_hash(user_input)
+  end
+
+  def self.request_hash_to_str(request_hash)
+    ret = ""
+    request_hash.each do |name, number|
+      ret << "#{name}: #{number}, "
+    end
+    ret[0...-1]
+  end
+
+  def self.request_str_to_hash(request_string)
+    ret = {}
+    cat_array = request_string.split(", ")
+    cat_array.each do |cat_and_num|
+      split_array = cat_and_num.split(": ")
+      cat_name = split_array[0].downcase
+      num_of_prob = split_array[1].to_i
+      ret[cat_name] = num_of_prob
+    end
+    ret
   end
 
   def self.defaults?(input)
@@ -67,14 +85,10 @@ class User
     puts "To see the DEFAULT TESTS you can use type default"
   end
 
-  def parse_default_request(request)
-    if User.defaults?(request)
+  def handle_default_request
       display_defaults
       default_option = get_default_option
-      input = @defaults[default_option].last
-    else
-      request
-    end
+      @defaults[default_option].last
   end
 
   def get_default_option
