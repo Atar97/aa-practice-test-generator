@@ -4,21 +4,20 @@ require 'byebug'
 require_relative 'user'
 class Generator
   def initialize(problem_file_name)
-    @user = User.new
     @user_request = Hash.new(0)
     @problem_file
     read_csv_file(problem_file_name)
     @categories = []
     make_categories
     @generated_files = {}
-    @defaults = @user.make_defaults(count_problems)
+    make_user(count_problems)
+    @defaults = @user.defaults
   end
 
-  def display_defaults
-    @defaults.each do |key, string_array|
-      puts "Default #{key} == #{string_array.first}"
-    end
+  def make_user(problem_counts)
+    @user = User.new(problem_counts)
   end
+
 
   def get_default_option
     puts "Enter the number of the default you would like to use: "
@@ -58,7 +57,7 @@ class Generator
   def parse_default_request(request)
     default_inputs = ["default", "defaults", "D", "d"]
     if default_inputs.include?(request)
-      display_defaults
+      @user.display_defaults
       default_option = get_default_option
       input = @defaults[default_option].last
     else

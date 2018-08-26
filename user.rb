@@ -1,7 +1,9 @@
 class User
-
-  def initialize
+  attr_reader :defaults, :input
+  
+  def initialize(problem_counts)
     @defaults = {}
+    make_defaults(problem_counts)
     @input
 
   end
@@ -37,6 +39,12 @@ class User
     all_probs_str = all_probs_str[0..-3]
     @defaults[:"12"] = ["Every Problem", all_probs_str]
     @defaults
+  end
+
+  def display_defaults
+    @defaults.each do |key, string_array|
+      puts "Default #{key} == #{string_array.first}"
+    end
   end
 
 end
