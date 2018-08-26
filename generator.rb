@@ -3,7 +3,7 @@ require 'colorize'
 require 'byebug'
 class Generator
   def initialize(problem_file_name)
-    @user_request = ""
+    @user_request = Hash.new(0)
     @problem_file
     read_csv_file(problem_file_name)
   end
@@ -69,7 +69,8 @@ class Generator
   end
 
   def process_requests(request)
-    if request == ("default" || "defaults" || "D" || "d")
+    default_inputs = ["default", "defaults", "D", "d"]
+    if default_inputs.include?(request)
       defaults = make_defaults
       display_defaults(defaults)
       default_option = get_default_option
@@ -79,27 +80,26 @@ class Generator
     end
   end
 
-  def make_category_request(input)
-    input = input.split(", ")
-    categoryrequests = Hash.new(0)
-    input.each do |request|
+  def make_category_request(input_string)
+    input_string = input_string.split(", ")
+    input_string.each do |request|
       req = request.downcase.split(": ")
-      categoryrequests[req[0]] = req[1].to_i
+      @user_request[req[0]] = req[1].to_i
     end
-    categoryrequests
+    @user_request
   end
 
-  def make_master(tests, categories, user_requests)
+  def make_master(categories)
     master = []
     categories.each do |category|
       all_prob_for_category = []
-      tests.each do |test_info_array|
+      @problem_file.each do |test_info_array|
         if category == test_info_array[1]
           all_prob_for_category << test_info_array
         end
       end
 
-      num_problems_requested = user_requests[category]
+      num_problems_requested = @user_request[category]
       master.concat(all_prob_for_category.sample(num_problems_requested))
     end
     master
@@ -112,10 +112,10 @@ class Generator
     input = process_requests(user_request)
 
 
-    user_request_hash = make_category_request(input)
+    make_category_request(input)
     # make test array for each category
 
-    master = make_master(@problem_file, category_array, user_request_hash)
+    master = make_master(category_array)
 
 
     # create new test, spec and solution files
