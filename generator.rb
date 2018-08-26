@@ -49,9 +49,9 @@ class Generator
     CSV.read('list.csv', headers: true, header_converters: :symbol, converters: :all)
   end
 
-  def make_categories(tests)
+  def make_categories(csv_tests)
     categories = []
-    tests.each do |test|
+    csv_tests.each do |test|
       categories << test[1] unless categories.include?(test[1])
     end
     categories
@@ -66,7 +66,7 @@ class Generator
   end
 
   def process_requests(request)
-    if request == "default" || "defaults" || "d" || "D"
+    if request == ("default" || "defaults" || "D" || "d")
       defaults = make_defaults
       display_defaults(defaults)
       default_option = get_default_option
@@ -77,6 +77,7 @@ class Generator
   end
 
   def make_category_request(input)
+    input = input.split(", ")
     categoryrequests = Hash.new(0)
     input.each do |request|
       req = request.downcase.split(": ")
@@ -85,33 +86,35 @@ class Generator
     categoryrequests
   end
 
-  def make_master
+  def make_master(tests, categories, user_requests)
+    master = []
+    categories.each do |category|
+      all_prob_for_category = []
+      tests.each do |test_info_array|
+        if category == test_info_array[1]
+          all_prob_for_category << test_info_array
+        end
+      end
 
+      num_problems_requested = user_requests[category]
+      master.concat(all_prob_for_category.sample(num_problems_requested))
+    end
+    master
   end
 
   def run
     print_instructions
-    tests = read_csv_file
-    categories = make_categories(tests)
-    request = receive_requests(categories)
+    csv_tests = read_csv_file
+    category_array = make_categories(csv_tests)
+    request = receive_requests(category_array)
     input = process_requests(request)
 
 
-    categoryrequests = make_category_request(input.split(", "))
+    user_request_hash = make_category_request(input)
     # make test array for each category
-    master = Array.new
-    categories.each do |category|
-      problems_in_category = Array.new
-      tests.each do |test|
-        if category == test[1]
-          problems_in_category << test
-        end
-      end
 
-      # pick tests at random from each category
-      n = categoryrequests[category]
-      master = master.concat(problems_in_category.sample(n))
-    end
+    master = make_master(csv_tests, category_array, user_request_hash)
+
 
     # create new test, spec and solution files
     practice_test = File.open("practice_test.rb", "w")
