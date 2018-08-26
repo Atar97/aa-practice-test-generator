@@ -14,7 +14,7 @@ class Generator
 
   def print_instructions
     system("clear")
-    puts "Welcome to Mallory's (Refactored by Austin) a/A Practice Assessment Generator".cyan
+    puts "Welcome to a/A Practice 01Assessment Generator 2.0".cyan
     puts "This generator will create a practice test based on your input. " \
           "You can choose how many problems from each category to include in your test. "
     puts "This program will generate 3 files in this folder: practice_test, spec, and solution. " \
@@ -67,10 +67,10 @@ class Generator
     puts "Input your requests, separated by commas and spaces please"
     puts "Example input: " + "array: 2, recursion: 1, sort: 1".yellow
     puts "To see the DEFAULT TESTS you can use type default"
-    process_requests(gets.chomp)
+    parse_default_request(gets.chomp)
   end
 
-  def process_requests(request)
+  def parse_default_request(request)
     default_inputs = ["default", "defaults", "D", "d"]
     if default_inputs.include?(request)
       display_defaults
@@ -81,13 +81,23 @@ class Generator
     end
   end
 
-  def category_request(input_string)
-    input_string = input_string.split(", ")
-    input_string.each do |request|
+  def create_user_requests
+    request = receive_requests.split(", ")
+    request.each do |request|
       req = request.downcase.split(": ")
       @user_request[req[0]] = req[1].to_i
     end
     @user_request
+  end
+
+  # "array: 2, recursion: 1, sort: 1"
+  #  hash = {'array' => 1}
+  def self.request_hash_to_str(request_hash)
+    ret = ""
+    request_hash.each do |name, number|
+      ret << "#{name}: #{number}, "
+    end
+    ret[0...-1]
   end
 
   def make_problem_master
@@ -126,23 +136,22 @@ class Generator
     end
   end
 
-  def finish(user_request)
-
+  def finish
+    close_files
+    puts "Done"
+    puts "Your practice test will have this makeup:"
+    puts Generator.request_hash_to_str(@user_request)
   end
 
 
   def run
     print_instructions
     make_categories
-    user_input = receive_requests
-    category_request(user_input)
+    create_user_requests
     generate_new_files
     add_requirements
     add_questions
-
-    close_files
-
-    puts "Done!"
+    finish
   end
 
   private
