@@ -1,0 +1,9 @@
+parse the files *******
+make the categories ******
+print instructions *******
+print the categories
+print how to do inputs and defaults
+if defaults print it out and convert that input into a hash
+else convert that input into a hash
+use the hash to make the test
+print out the finish
