@@ -2,13 +2,13 @@ require 'csv'
 require 'colorize'
 require 'byebug'
 require_relative 'user'
+
 class Generator
+
   def initialize(problem_file_name)
     @user_request = Hash.new(0)
-    @problem_file
-    read_csv_file(problem_file_name)
-    @categories = []
-    make_categories
+    @problem_csv = Generator.read_csv_file(problem_file_name)
+    @categories = Generator.make_categories(@problem_csv)
     @generated_files = {}
     make_user(count_problems)
     @defaults = @user.defaults
@@ -18,29 +18,32 @@ class Generator
     @user = User.new(problem_counts)
   end
 
-
   def get_default_option
     puts "Enter the number of the default you would like to use: "
     gets.chomp.to_sym
   end
 
-
-
-  def read_csv_file(file_name)
-    @problem_file = CSV.read(file_name, headers: true, header_converters: :symbol, converters: :all)
-    true
+  def self.read_csv_file(file_name)
+    CSV.read(file_name, headers: true, header_converters: :symbol, converters: :all)
   end
 
-  def make_categories
-    @problem_file.each do |test_info|
-      @categories << test_info[1] unless @categories.include?(test_info[1])
+  def generate_new_files
+    @generated_files[:prac] = File.open("practice_test.rb", "w")
+    @generated_files[:spec] = File.open("spec.rb", "w")
+    @generated_files[:sol] = File.open("solution.rb", "w")
+  end
+
+  def self.make_categories(problem_files)
+    result = []
+    problem_files.each do |test_info|
+      result << test_info[1] unless result.include?(test_info[1])
     end
-    @categories
+    result
   end
 
   def count_problems
     counting_hash = Hash.new(0)
-    @problem_file.each do |test_info|
+    @problem_csv.each do |test_info|
       counting_hash[test_info[1]] += 1
     end
     counting_hash
@@ -86,7 +89,7 @@ class Generator
     master = []
     @categories.each do |category|
       all_prob_category = []
-      @problem_file.each do |test_info_array|
+      @problem_csv.each do |test_info_array|
         if category == test_info_array[1]
           all_prob_category << test_info_array
         end
@@ -95,12 +98,6 @@ class Generator
       master.concat(needed_problems)
     end
     master
-  end
-
-  def generate_new_files
-    @generated_files[:prac] = File.open("practice_test.rb", "w")
-    @generated_files[:spec] = File.open("spec.rb", "w")
-    @generated_files[:sol] = File.open("solution.rb", "w")
   end
 
   def add_requirements
@@ -124,7 +121,6 @@ class Generator
     puts "Your practice test will have this makeup:".cyan
     puts Generator.request_hash_to_str(@user_request).yellow
   end
-
 
   def run
     @user.initial_instructions
