@@ -25,8 +25,8 @@ class Generator
   end
 
   def display_defaults
-    @defaults.each do |key, string|
-      puts "Default #{key} == #{string}"
+    @defaults.each do |key, string_array|
+      puts "Default #{key} == #{string_array.first}"
     end
   end
 
@@ -36,18 +36,24 @@ class Generator
   end
 
   def make_defaults
-    @defaults[:"1"] = "array: 2, recursion: 1, sort: 1"
-    @defaults[:"2"] = "recursion: 3, sort: 2, enumerable: 1"
-    @defaults[:"3"] = "array: 3, recursion: 1, sort: 1, string: 2"
-    @defaults[:"4"] = "array: 1, recursion: 1, sort: 1, enumerable: 1, string: 1"
-    @defaults[:"5"] = "array: 2, recursion: 1, sort: 1"
-    @defaults[:"6"] = "array: 2, recursion: 1, sort: 1"
-    #those are a work in progress
-    # defaults_hash[:"7"] = "Every array problem"
-    # defaults_hash[:"8"] = "Every recursion problem"
-    # defaults_hash[:"9"] = "Every string problem"
-    # defaults_hash[:"10"] = "Every enumerable problem"
-    # defaults_hash[:"11"] = "Every sort problem"
+    counts = count_problems
+    @defaults[:"1"] = ["array: 2, recursion: 1, sort: 1"]
+    @defaults[:"2"] = ["recursion: 3, sort: 2, enumerable: 1"]
+    @defaults[:"3"] = ["array: 3, recursion: 1, sort: 1, string: 2"]
+    @defaults[:"4"] = ["array: 1, recursion: 1, sort: 1, enumerable: 1, string: 1"]
+    @defaults[:"5"] = ["array: 2, recursion: 1, sort: 1"]
+    @defaults[:"6"] = ["array: 2, recursion: 1, sort: 1"]
+    @defaults[:"7"] = ["Every array problem", "array: #{counts['array']}"]
+    @defaults[:"8"] = ["Every recursion problem", "recursion: #{counts['recursion']}"]
+    @defaults[:"9"] = ["Every string problem", "string: #{counts['string']}"]
+    @defaults[:"10"] = ["Every enumerable problem", "enumerable: #{counts['enumerable']}"]
+    @defaults[:"11"] = ["Every sort problem", "sort: #{counts['sort']}"]
+    all_probs_str = ""
+    counts.each do |category, number|
+      all_probs_str += "#{category}: #{number}, "
+    end
+    all_probs_str = all_probs_str[0..-3]
+    @defaults[:"12"] = ["Every Problem", all_probs_str]
     @defaults
   end
 
@@ -84,7 +90,7 @@ class Generator
     if default_inputs.include?(request)
       display_defaults
       default_option = get_default_option
-      input = @defaults[default_option]
+      input = @defaults[default_option].last
     else
       request
     end
