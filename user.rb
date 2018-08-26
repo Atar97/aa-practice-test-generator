@@ -63,13 +63,13 @@ class User
   end
 
   def self.request_str_to_hash(request_string)
-    ret = {}
+    ret = Hash.new(0)
     cat_array = request_string.split(", ")
     cat_array.each do |cat_and_num|
       split_array = cat_and_num.split(": ")
       cat_name = split_array[0].downcase
       num_of_prob = split_array[1].to_i
-      ret[cat_name] = num_of_prob
+      ret[cat_name] += num_of_prob
     end
     ret
   end
