@@ -139,8 +139,8 @@ class Generator
   def finish
     close_files
     puts "Done"
-    puts "Your practice test will have this makeup:"
-    puts Generator.request_hash_to_str(@user_request)
+    puts "Your practice test will have this makeup:".cyan
+    puts Generator.request_hash_to_str(@user_request).yellow
   end
 
 
@@ -159,11 +159,6 @@ class Generator
   def close_files
     @generated_files.each {|key, file| file.close}
   end
-
-  # def open_files
-  #   # byebug
-  #   @generated_files.each {|key, file| File.open(File.basename(file), "w")}
-  # end
 
 end
 
