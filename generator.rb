@@ -66,7 +66,7 @@ class Generator
   end
 
   def process_requests(request)
-    if request == "default"
+    if request == "default" || "defaults" || "d" || "D"
       defaults = make_defaults
       display_defaults(defaults)
       default_option = get_default_option
@@ -76,25 +76,26 @@ class Generator
     end
   end
 
+  def make_category_request(input)
+    categoryrequests = Hash.new(0)
+    input.each do |request|
+      req = request.downcase.split(": ")
+      categoryrequests[req[0]] = req[1].to_i
+    end
+    categoryrequests
+  end
+
+  def make_master
+
+  end
 
   def run
-
     print_instructions
-    # read in csv with test info
     tests = read_csv_file
-    # list possible categories
     categories = make_categories(tests)
     request = receive_requests(categories)
     input = process_requests(request)
 
-    def make_category_request(input)
-      categoryrequests = Hash.new(0)
-      input.each do |request|
-        req = request.downcase.split(": ")
-        categoryrequests[req[0]] = req[1].to_i
-      end
-      categoryrequests
-    end
 
     categoryrequests = make_category_request(input.split(", "))
     # make test array for each category
