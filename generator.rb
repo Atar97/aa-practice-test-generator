@@ -6,20 +6,18 @@ class Generator
 
   end
 
-  def run
-
-    def display_defaults(defaults_hash)
-      defaults_hash.each do |key, string|
-        puts "Default #{key} == #{string}"
-      end
+  def display_defaults(defaults_hash)
+    defaults_hash.each do |key, string|
+      puts "Default #{key} == #{string}"
     end
+  end
 
-    def get_default_option
-      puts "Enter the number of the default you would like to use: "
-      gets.chomp.to_sym
-    end
-    
-    # Instructions
+  def get_default_option
+    puts "Enter the number of the default you would like to use: "
+    gets.chomp.to_sym
+  end
+
+  def print_instructions
     system("clear")
     puts "Welcome to Mallory's (Refactored by Austin) a/A Practice Assessment Generator".cyan
     puts "This generator will create a practice test based on your input. " \
@@ -28,16 +26,27 @@ class Generator
           "Complete the practice_test file, running the spec file to check your answers. " \
           "When your time is up (you are timing yourself, right?), compare your answers to the solutions."
     puts "Good luck!"
+  end
 
-    # read in csv with test info
-    tests = CSV.read('list.csv', headers: true, header_converters: :symbol, converters: :all)
+  def read_csv_file
+    CSV.read('list.csv', headers: true, header_converters: :symbol, converters: :all)
+  end
 
-    # list possible categories
-    categories = Array.new
+  def make_categories(tests)
+    categories = []
     tests.each do |test|
-      categories << test[1]
+      categories << test[1] unless categories.include?(test[1])
     end
-    categories = categories.uniq
+    categories
+  end
+
+  def run
+
+    print_instructions
+    # read in csv with test info
+    tests = read_csv_file
+    # list possible categories
+    categories = make_categories(tests)
     puts "Possible categories: #{categories.join(", ")}".magenta
     puts
 
