@@ -5,11 +5,12 @@ class Generator
   def initialize(problem_file_name)
     @user_request = Hash.new(0)
     @problem_file
+    read_csv_file(problem_file_name)
     @categories = []
+    make_categories
     @generated_files = {}
     @defaults = {}
     make_defaults
-    read_csv_file(problem_file_name)
   end
 
   def print_instructions
@@ -56,10 +57,18 @@ class Generator
   end
 
   def make_categories
-    @problem_file.each do |test|
-      @categories << test[1] unless @categories.include?(test[1])
+    @problem_file.each do |test_info|
+      @categories << test_info[1] unless @categories.include?(test_info[1])
     end
     @categories
+  end
+
+  def count_problems
+    counting_hash = Hash.new(0)
+    @problem_file.each do |test_info|
+      counting_hash[test_info[1]] += 1
+    end
+    counting_hash
   end
 
   def receive_requests
@@ -90,8 +99,6 @@ class Generator
     @user_request
   end
 
-  # "array: 2, recursion: 1, sort: 1"
-  #  hash = {'array' => 1}
   def self.request_hash_to_str(request_hash)
     ret = ""
     request_hash.each do |name, number|
@@ -146,7 +153,6 @@ class Generator
 
   def run
     print_instructions
-    make_categories
     create_user_requests
     generate_new_files
     add_requirements
@@ -163,4 +169,5 @@ class Generator
 end
 
 generator = Generator.new('list.csv')
+# puts generator.count_problems
 generator.run
