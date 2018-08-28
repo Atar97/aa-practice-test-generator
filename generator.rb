@@ -21,9 +21,9 @@ class Generator
   end
 
   def generate_new_files
-    @generated_files[:prac] = File.open("practice_test.rb", "w")
-    @generated_files[:spec] = File.open("spec.rb", "w")
-    @generated_files[:sol] = File.open("solution.rb", "w")
+    @generated_files[:prac] = File.open("a_01/practice_test.rb", "w")
+    @generated_files[:spec] = File.open("a_01spec.rb", "w")
+    @generated_files[:sol] = File.open("a_01/solution.rb", "w")
   end
 
   def self.make_categories(problem_files)
@@ -97,6 +97,6 @@ class Generator
 
 end
 
-generator = Generator.new('csv_problems/a_01.csv')
+generator = Generator.new('a_01/a_01.csv')
 # puts generator.count_problems
 generator.run

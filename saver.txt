@@ -1,5 +1,0 @@
-# def create_new_files
-#   @new_files << File.open("practice_test.rb", "w")
-#   @new_files << File.open("spec.rb", "w")
-#   @new_files << File.open("solution.rb", "w")
-# end
