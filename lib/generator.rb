@@ -2,6 +2,7 @@ require 'csv'
 require 'colorize'
 require 'byebug'
 require_relative 'user'
+require_relative 'file_read'
 
 class Generator
 
