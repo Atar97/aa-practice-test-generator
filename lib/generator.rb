@@ -19,16 +19,6 @@ class Generator
     @user.make_defaults(count_problems)
   end
 
-  def self.read_csv_file(file_name, directory_name)
-    CSV.read(directory_name + file_name, headers: true, header_converters: :symbol, converters: :all)
-  end
-
-  def generate_new_files
-    @generated_files[:prac] = File.open("#{@dir}/practice_test.rb", "w")
-    @generated_files[:spec] = File.open("#{@dir}/spec.rb", "w")
-    @generated_files[:sol] = File.open("#{@dir}/solution.rb", "w")
-  end
-
   def self.make_categories(problem_files)
     result = []
     problem_files.each do |test_info|
@@ -60,36 +50,13 @@ class Generator
     master
   end
 
-  def add_requirements
-    @generated_files[:spec] << "require 'rspec'\n"
-    @generated_files[:spec] << "require_relative 'practice_test'\n"
-    @generated_files[:prac] << "require 'byebug'\n"
-  end
-
-  def add_questions
-    problem_master = make_problem_master
-    problem_master.each do |test|
-      @generated_files[:prac] << File.read("#{@dir}/#{test[2]}") << "\n"
-      @generated_files[:spec] << File.read("#{@dir}/#{test[3]}") << "\n"
-      @generated_files[:sol] << File.read("#{@dir}/#{test[4]}") << "\n"
-    end
-  end
 
   def run
     @user.initial_instructions
     give_user_problems
     @user.create_request_hash(@categories)
-    generate_new_files
-    add_requirements
-    add_questions
-    close_files
+    @reader.make_files(make_problem_master)
     @user.finish
-  end
-
-  private
-
-  def close_files
-    @generated_files.each {|key, file| file.close}
   end
 
 end
