@@ -5,8 +5,8 @@ require_relative 'user'
 
 class Generator
 
-  def initialize(problem_file_name, directory_name)
-    @dir = directory_name
+  def initialize(problem_file_name, path)
+    @dir = path
     @problem_csv = Generator.read_csv_file(problem_file_name, @dir)
     @categories = Generator.make_categories(@problem_csv)
     @generated_files = {}
