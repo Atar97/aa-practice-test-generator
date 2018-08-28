@@ -7,7 +7,7 @@ class Generator
 
   def initialize(path)
     @reader = FileReader.new(path)
-    @user = User.new
+    @user = FirstUser.new
   end
 
   def give_user_problems

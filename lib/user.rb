@@ -1,6 +1,8 @@
 require 'colorize'
-
 class User
+end
+
+class FirstUser
   attr_reader :defaults, :request
 
   def initialize
@@ -50,10 +52,10 @@ class User
   def create_request_hash(categories)
     print_category_instructions(categories)
     user_input = gets.chomp
-    if User.defaults?(user_input)
+    if FirstUser.defaults?(user_input)
       user_input = handle_default_request
     end
-    @request = User.request_str_to_hash(user_input)
+    @request = FirstUser.request_str_to_hash(user_input)
   end
 
   def self.request_hash_to_str(request_hash)
@@ -79,7 +81,7 @@ class User
   def finish
     puts "Done"
     puts "Your practice test will have this makeup:".cyan
-    puts User.request_hash_to_str(@request).yellow
+    puts FirstUser.request_hash_to_str(@request).yellow
   end
 
   def self.defaults?(input)
@@ -103,5 +105,9 @@ class User
     puts "Enter the number of the default you would like to use: "
     gets.chomp.to_sym
   end
+
+end
+
+class SecondUser < User
 
 end
