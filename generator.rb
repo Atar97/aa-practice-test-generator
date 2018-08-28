@@ -92,10 +92,5 @@ class Generator
 
 end
 
-<<<<<<< HEAD
-generator = Generator.new('list.csv')
-=======
 generator = Generator.new('a_01.csv', 'a_01/')
-# puts generator.count_problems
->>>>>>> user_class
 generator.run
