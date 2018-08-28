@@ -5,8 +5,9 @@ require_relative 'user'
 
 class Generator
 
-  def initialize(problem_file_name)
-    @problem_csv = Generator.read_csv_file(problem_file_name)
+  def initialize(problem_file_name, directory_name)
+    @dir = directory_name
+    @problem_csv = Generator.read_csv_file(problem_file_name, @dir)
     @categories = Generator.make_categories(@problem_csv)
     @generated_files = {}
     @user = User.new
@@ -16,14 +17,14 @@ class Generator
     @user.make_defaults(count_problems)
   end
 
-  def self.read_csv_file(file_name)
-    CSV.read(file_name, headers: true, header_converters: :symbol, converters: :all)
+  def self.read_csv_file(file_name, directory_name)
+    CSV.read(directory_name + file_name, headers: true, header_converters: :symbol, converters: :all)
   end
 
   def generate_new_files
-    @generated_files[:prac] = File.open("a_01/practice_test.rb", "w")
-    @generated_files[:spec] = File.open("a_01spec.rb", "w")
-    @generated_files[:sol] = File.open("a_01/solution.rb", "w")
+    @generated_files[:prac] = File.open("#{@dir}/practice_test.rb", "w")
+    @generated_files[:spec] = File.open("#{@dir}/spec.rb", "w")
+    @generated_files[:sol] = File.open("#{@dir}/solution.rb", "w")
   end
 
   def self.make_categories(problem_files)
@@ -66,9 +67,9 @@ class Generator
   def add_questions
     problem_master = make_problem_master
     problem_master.each do |test|
-      @generated_files[:prac] << File.read(test[2]) << "\n"
-      @generated_files[:spec] << File.read(test[3]) << "\n"
-      @generated_files[:sol] << File.read(test[4]) << "\n"
+      @generated_files[:prac] << File.read("#{@dir}/#{test[2]}") << "\n"
+      @generated_files[:spec] << File.read("#{@dir}/#{test[3]}") << "\n"
+      @generated_files[:sol] << File.read("#{@dir}/#{test[4]}") << "\n"
     end
   end
 
@@ -97,6 +98,6 @@ class Generator
 
 end
 
-generator = Generator.new('a_01/a_01.csv')
+generator = Generator.new('a_01.csv', 'a_01/')
 # puts generator.count_problems
 generator.run
