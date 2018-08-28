@@ -6,9 +6,10 @@ require_relative 'file_read'
 
 class Generator
 
-  def initialize(problem_file_name, path)
+  def initialize(path)
     @dir = path
-    @problem_csv = Generator.read_csv_file(problem_file_name, @dir)
+    @reader = FileReader.new(path)
+    @problem_csv = @reader.read_csv_file
     @categories = Generator.make_categories(@problem_csv)
     @generated_files = {}
     @user = User.new
@@ -93,5 +94,5 @@ class Generator
 
 end
 
-generator = Generator.new('a_01.csv', 'a_01/')
+generator = Generator.new('a_01')
 generator.run
