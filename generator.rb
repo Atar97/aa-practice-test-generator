@@ -97,6 +97,6 @@ class Generator
 
 end
 
-generator = Generator.new('list.csv')
+generator = Generator.new('csv_problems/a_01.csv')
 # puts generator.count_problems
 generator.run
