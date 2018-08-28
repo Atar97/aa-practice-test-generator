@@ -1,25 +1,38 @@
 require 'colorize'
 
 class User
+
+  def initialize(text_path = nil)
+    @txt = text_path
+  end
+
+  private
+
+  def print_lines(range, color = :white)
+    l_num = 0
+    File.new(@txt).each_line do |line|
+      print line.colorize(color) if l_num >= range.first - 1
+      break if l_num == range.last
+      l_num += 1
+    end
+  end
+
 end
 
 class FirstUser < User
   attr_reader :defaults, :request
 
-  def initialize
+  def initialize(text_path)
+    super
     @defaults = {}
     @request = Hash.new(0)
   end
 
   def initial_instructions
     system("clear")
-    puts "Welcome to a/A Practice 01Assessment Generator 2.0".cyan
-    puts "This generator will create a practice test based on your input. " \
-          "You can choose how many problems from each category to include in your test. "
-    puts "This program will generate 3 files in this folder: practice_test, spec, and solution. " \
-          "Complete the practice_test file, running the spec file to check your answers. " \
-          "When your time is up (you are timing yourself, right?), compare your answers to the solutions."
-    puts "Good luck!"
+    print_lines([1], :cyan)
+    print_lines([2, 7])
+
   end
 
   def make_defaults(problem_counts)
@@ -111,26 +124,19 @@ end
 
 class SecondUser < User
 
-  def initialize
+  def initialize(text_path)
     @request
+    super
   end
 
   def initial_instructions
-    l_num = 0
-    File.new('lib/outputs/g2.txt').each_line do |line|
-      print line.red
-      break if l_num == 1
-      l_num +=1
-    end
+    system('clear')
+    print_lines([1,2], :red)
+    gets.chomp.to_i
   end
 
   def which_problem
-    l_num = 0
-    File.new('lib/outputs/g2.txt').each_line do |line|
-      print line.yellow if l_num > 1
-      break if l_num == 5
-      l_num += 1
-    end
+    print_lines([4,6], :yellow)
     puts "\nMancala, Blackjack, Battleship, Hangman, Simon, Mastermind".light_blue
     gets.chomp
   end
@@ -138,6 +144,8 @@ class SecondUser < User
 
 end
 
-user = SecondUser.new
-user.initial_instructions
-user.which_problem
+if __FILE__ == $PROGRAM_NAME
+  user = SecondUser.new("lib/outputs/g2.txt")
+  user.initial_instructions
+  user.which_problem
+end

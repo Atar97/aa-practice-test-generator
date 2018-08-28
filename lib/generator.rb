@@ -6,7 +6,7 @@ class Generator
 
   def initialize(path)
     @reader = FileReader.new(path)
-    @user = FirstUser.new
+    @user = FirstUser.new('lib/outputs/g1.txt')
   end
 
   def give_user_problems
@@ -31,7 +31,9 @@ class G2
     @user = SecondUser.new
   end
 
-  
+end
 
-
+if __FILE__ == $PROGRAM_NAME
+  g1 = Generator.new('a_01')
+  g1.run
 end
