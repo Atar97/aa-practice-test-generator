@@ -1,4 +1,3 @@
-require 'colorize'
 require 'byebug'
 require_relative 'user'
 require_relative 'file_read'
@@ -24,5 +23,15 @@ class Generator
 
 end
 
-generator = Generator.new('a_01')
-generator.run
+
+class G2
+
+  def initialize(path)
+    @reader = FileReader.new(path)
+    @user = SecondUser.new
+  end
+
+  
+
+
+end

@@ -1,0 +1,6 @@
+Hello and Welcome to the test generator 2.0 by Austin
+First please enter which test you are preparing for:
+
+Below are all the problems to choose from,
+for a_02 you will be creating games from specs
+choose which game to work on or type random:

@@ -1,8 +1,9 @@
 require 'colorize'
+
 class User
 end
 
-class FirstUser
+class FirstUser < User
   attr_reader :defaults, :request
 
   def initialize
@@ -110,4 +111,33 @@ end
 
 class SecondUser < User
 
+  def initialize
+    @request
+  end
+
+  def initial_instructions
+    l_num = 0
+    File.new('lib/outputs/g2.txt').each_line do |line|
+      print line.red
+      break if l_num == 1
+      l_num +=1
+    end
+  end
+
+  def which_problem
+    l_num = 0
+    File.new('lib/outputs/g2.txt').each_line do |line|
+      print line.yellow if l_num > 1
+      break if l_num == 5
+      l_num += 1
+    end
+    puts "\nMancala, Blackjack, Battleship, Hangman, Simon, Mastermind".light_blue
+    gets.chomp
+  end
+
+
 end
+
+user = SecondUser.new
+user.initial_instructions
+user.which_problem
