@@ -1,4 +1,3 @@
-require 'csv'
 require 'colorize'
 require 'byebug'
 require_relative 'user'

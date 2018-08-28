@@ -1,4 +1,4 @@
-Name,Category,ProblemFile,SpecFile,SolutionFile
+Name,Category,Problem,Spec,Solution
 base_converter,recursion,problems/base_converter.rb,specs/base_converter_spec.rb,solutions/base_converter_solution.rb
 binary_search,array,problems/binary_search.rb,specs/binary_search_spec.rb,solutions/binary_search_solution.rb
 caesar_cipher,string,problems/caesar_cipher.rb,specs/caesar_cipher_spec.rb,solutions/caesar_cipher_solution.rb

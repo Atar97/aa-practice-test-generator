@@ -1,4 +1,5 @@
 # require 'singleton'
+require 'csv'
 class FileReader
 
   # include Singleton
@@ -35,11 +36,8 @@ class FileReader
   def make_problem_master(requests)
     master = []
     categories.each do |category|
-      all_prob_in_category = []
-      @csv.each do |test_info|
-        if category == test_info[1]
-          all_prob_in_category << test_info
-        end
+      all_prob_in_category = @csv.select do |test_info|
+        category == test_info[:category]
       end
       needed_problems = all_prob_in_category.sample(requests[category])
       master.concat(needed_problems)
@@ -48,21 +46,21 @@ class FileReader
   end
 
   def generate_new_files
-    @files[:prac] = File.open("#{@path}/practice_test.rb", "w")
+    @files[:prob] = File.open("#{@path}/practice_test.rb", "w")
     @files[:spec] = File.open("#{@path}/spec.rb", "w")
     @files[:sol] = File.open("#{@path}/solution.rb", "w")
   end
 
   def add_requirements
     @files[:spec] << "require 'rspec'\nrequire_relative 'practice_test'\n"
-    @files[:prac] << "require 'byebug'\n"
+    @files[:prob] << "require 'byebug'\n"
   end
 
   def add_questions(problem_info_array)
     problem_info_array.each do |file_name|
-      @files[:prac] << File.read("#{@path}/#{file_name[2]}") << "\n"
-      @files[:spec] << File.read("#{@path}/#{file_name[3]}") << "\n"
-      @files[:sol] << File.read("#{@path}/#{file_name[4]}") << "\n"
+      @files[:prob] << File.read("#{@path}/#{file_name[:problem]}") << "\n"
+      @files[:spec] << File.read("#{@path}/#{file_name[:spec]}") << "\n"
+      @files[:sol] << File.read("#{@path}/#{file_name[:solution]}") << "\n"
     end
   end
 
