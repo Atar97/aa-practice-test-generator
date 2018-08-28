@@ -3,13 +3,24 @@ class FileReader
 
   # include Singleton
 
+  attr_reader :csv
+
   def initialize(file_path)
     @path = file_path
     @files = {}
+    @csv = FileReader.read_csv_file(@path)
   end
 
-  def read_csv_file
-    CSV.read("#{@path}/#{@path}.csv", headers: true, header_converters: :symbol, converters: :all)
+  def self.read_csv_file(path)
+    CSV.read("#{path}/#{path}.csv", headers: true, header_converters: :symbol, converters: :all)
+  end
+
+  def categories
+    result = []
+    @csv.each do |test_info|
+      result << test_info[1] unless result.include?(test_info[1])
+    end
+    result
   end
 
   def make_files(problem_master)
@@ -19,6 +30,13 @@ class FileReader
     close_files
   end
 
+  def count_problems
+    problem_counts = Hash.new(0)
+    @csv.each do |test_info_row|
+      problem_counts[test_info_row[1]] += 1
+    end
+    problem_counts
+  end
 
   def generate_new_files
     @files[:prac] = File.open("#{@path}/practice_test.rb", "w")
@@ -27,14 +45,12 @@ class FileReader
   end
 
   def add_requirements
-    @files[:spec] << "require 'rspec'\n"
-    @files[:spec] << "require_relative 'practice_test'\n"
+    @files[:spec] << "require 'rspec'\nrequire_relative 'practice_test'\n"
     @files[:prac] << "require 'byebug'\n"
   end
 
   def add_questions(problem_info_array)
     problem_info_array.each do |file_name|
-      # byebug
       @files[:prac] << File.read("#{@path}/#{file_name[2]}") << "\n"
       @files[:spec] << File.read("#{@path}/#{file_name[3]}") << "\n"
       @files[:sol] << File.read("#{@path}/#{file_name[4]}") << "\n"
