@@ -16,26 +16,35 @@ class FileReader
   end
 
   def categories
-    result = []
-    @csv.each do |test_info|
-      result << test_info[1] unless result.include?(test_info[1])
-    end
-    result
-  end
-
-  def make_files(problem_master)
-    generate_new_files
-    add_requirements
-    add_questions(problem_master)
-    close_files
+    @csv.map {|test_info| test_info[1]}.uniq
   end
 
   def count_problems
     problem_counts = Hash.new(0)
-    @csv.each do |test_info_row|
-      problem_counts[test_info_row[1]] += 1
-    end
+    @csv.each { |test_info| problem_counts[test_info[1]] += 1}
     problem_counts
+  end
+
+  def make_files(requests)
+    generate_new_files
+    add_requirements
+    add_questions(make_problem_master(requests))
+    close_files
+  end
+
+  def make_problem_master(requests)
+    master = []
+    categories.each do |category|
+      all_prob_in_category = []
+      @csv.each do |test_info|
+        if category == test_info[1]
+          all_prob_in_category << test_info
+        end
+      end
+      needed_problems = all_prob_in_category.sample(requests[category])
+      master.concat(needed_problems)
+    end
+    master
   end
 
   def generate_new_files
